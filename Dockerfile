@@ -15,9 +15,18 @@ COPY src/ /workspace/src
 # Build using Gradle wrapper
 RUN ./gradlew nativeCompile --no-daemon
 
-# Support for spring.profiles.active
+# Native image build, free from JDK and other stuff
+FROM ghcr.io/graalvm/native-image-community:25
+
+WORKDIR /app
+
+# Allow Spring profile override
 ARG SPRING_PROFILE=default
-ENV SPRING_PROFILES_ACTIVE=$SPRING_PROFILE
+ENV SPRING_PROFILES_ACTIVE=${SPRING_PROFILE}
+
+# Copy native binary from build stage
+COPY --from=builder /workspace/build/native/nativeCompile/ /app
 
 EXPOSE 8080
-ENTRYPOINT ["/workspace/build/native/nativeCompile/graal.vm.demo"]
+
+ENTRYPOINT ["/app/graal.vm.demo"]
