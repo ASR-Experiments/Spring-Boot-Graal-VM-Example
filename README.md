@@ -7,7 +7,7 @@
 #### Build
 
 ```shell
-docker build --no-cache --progress=plain -t graal-vm-demo:0.0.1 . 
+docker build --no-cache --progress=plain -t graal-vm-demo:0.0.1 -t graal-vm-demo:latest . 
 ```
 
 #### Run
